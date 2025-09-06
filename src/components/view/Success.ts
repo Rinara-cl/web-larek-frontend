@@ -1,32 +1,39 @@
-import { Component } from '../base/Сomponent';
-import { ensureElement } from '../../utils/utils';
-import { ISuccessView } from '../../types';
+import { Component } from "../base/Component";
+import { ensureElement } from "../../utils/utils";
 
-interface ISuccessActions {
+
+// Интерфейс класса Success
+export interface ISuccessActions {
 	onClick: () => void;
 }
 
+// Интерфейс успешной оплаты
+export interface ISuccessView {
+	button: boolean;
+	total: number;
+}
+
 export class Success extends Component<ISuccessView> {
-	protected _close: HTMLElement;
+	protected _close: HTMLButtonElement;
 	protected _total: HTMLElement;
 
-	constructor(container: HTMLElement, actions?: ISuccessActions) {
+	constructor(container: HTMLElement, protected actions?: ISuccessActions) {
 		super(container);
 
 		this._total = ensureElement<HTMLElement>(
 			'.order-success__description',
 			this.container
 		);
-		this._close = ensureElement<HTMLElement>(
+		this._close = ensureElement<HTMLButtonElement>(
 			'.order-success__close',
 			this.container
 		);
 
-		if (actions?.onClick) {
+		if (actions?.onClick)
 			this._close.addEventListener('click', actions.onClick);
-		}
 	}
+
 	set total(value: number) {
-		this.setText(this._total, `Списано ${value} синапсов`);
+		this._total.textContent = `Списано ${value} синапсов`;
 	}
 }

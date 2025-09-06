@@ -1,7 +1,15 @@
 import { Component } from '../base/Component';
 import { createElement, ensureElement } from '../../utils/utils';
 import { EventEmitter } from '../base/events';
-import { IBasketView } from '../../types';
+
+
+
+// Интерфейс корзины
+export interface IBasketView {
+    items: HTMLElement[];
+    total: number;
+    buttonToggler: string[];
+}
 
 
 export class Basket extends Component<IBasketView> {
@@ -45,7 +53,7 @@ export class Basket extends Component<IBasketView> {
 		this.setText(this._total, `${summ.toString()} синапсов`);
 	}
 
-    resetCartView(){
+    resetBasketView(){
         this.items = [];
     }
 }

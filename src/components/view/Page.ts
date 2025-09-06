@@ -14,7 +14,7 @@ export class Page extends Component<IPageView> {
 	protected _counter: HTMLElement;
 	protected _catalog: HTMLElement;
 	protected _wrapper: HTMLElement;
-	protected _shoppingCartIcon: HTMLElement;
+	protected _paymentIcon: HTMLElement;
 
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
@@ -22,9 +22,9 @@ export class Page extends Component<IPageView> {
 		this._counter = ensureElement<HTMLElement>('.header__basket-counter');
 		this._catalog = ensureElement<HTMLElement>('.gallery');
 		this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
-		this._shoppingCartIcon = ensureElement<HTMLElement>('.header__basket');
-		this._shoppingCartIcon.addEventListener('click', () => {
-			this.events.emit('shoppingCart:select');
+		this._paymentIcon = ensureElement<HTMLElement>('.header__basket');
+		this._paymentIcon.addEventListener('click', () => {
+			this.events.emit('payment:select');
 		});
 	}
 

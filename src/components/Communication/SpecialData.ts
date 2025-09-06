@@ -6,19 +6,31 @@ import {
 	IOrder,
 	
 } from '../../types';
-import { Model } from '../base/Modal';
+
+import { IEvents } from '../base/events';
+
+// Базовая модель
+export abstract class Model<T> {
+    constructor(data: Partial<T>, protected events: IEvents) {
+        Object.assign(this, data);
+    }
+
+    emitChanges(event: string, payload?: object) {
+        this.events.emit(event, payload ?? {});
+    }
+}
 
 // Интерфейс приложения
-export interface IAppState {
+export interface ISpecialData {
 	selectedProduct: IProductView;
 	basket: {}
 	productList: IProductView[];
 	currentOrder: IOrder;
 }
 
-export class AppState extends Model<IAppState> {
+export class SpecialData extends Model<ISpecialData> {
 	catalog: IProductView[];
-	payment: IProductView[] = [];
+	basket: IProductView[] = [];
 	// В поле сохраняется ID товара, отображаемого в модальном окне
 	preview: string | null; 
 	formErrors: FormErrors = {};
@@ -31,37 +43,37 @@ export class AppState extends Model<IAppState> {
 	};
 	
 
-	setCatalog(productCards: IProductView[]) {
+	setCatalogProducts(productCards: IProductView[]) {
 		this.catalog = productCards;
 		this.emitChanges('catalog:change', { catalog: this.catalog });
 	}
 	// Получение данных одной карточки для ее отображения в модальном окне
-	setPreview(item: IProductView) {
+	setPreviewProducts(item: IProductView) {
 		this.preview = item.id;
 		this.emitChanges('preview:change', item);
 	}
 
-	addToBasket(item: IProductView) {
-		this.payment.push(item);
+	addToBasketProducts(item: IProductView) {
+		this.basket.push(item);
 		this.emitChanges('payment:change', item);
 	}
 
-	removeFromBasket(item: IProductView) {
-		const index = this.payment.indexOf(item);
-		this.payment.splice(index, 1);
+	removeFromBasketProducts(item: IProductView) {
+		const index = this.basket.indexOf(item);
+		this.basket.splice(index, 1);
 		item.cartPresence = false;
 		this.emitChanges('payment:change', item);
 	}
 
 	// Подсчет количества товаров в корзине для вывода значения у иконки корзины на главной странице
-	countBasket() {
-		return this.payment.length;
+	countBasketProducts() {
+		return this.basket.length;
 	}
 
 	// Подсчет общей стоимости товаров в корзине
-	getTotal() {
+	getTotalProducts() {
 		let summ = 0;
-		this.payment.forEach((item) => {
+		this.basket.forEach((item) => {
 			summ = summ + item.price;
 		});
 
@@ -69,9 +81,9 @@ export class AppState extends Model<IAppState> {
 	}
 
 	// Удаление всех товаров из корзины после завершения заказа
-	clearBasket() {
+	clearBasketProducts() {
 		this.catalog = [];
-		this.payment.forEach((item) => {
+		this.basket.forEach((item) => {
 			item.cartPresence = false;
 		});
 	}

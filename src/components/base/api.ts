@@ -21,20 +21,20 @@ export class Api {
         };
     }
 
-    protected async handleResponse(response: Response): Promise<object> {
+    protected handleResponse(response: Response): Promise<object> {
         if (response.ok) return response.json();
         else return response.json()
             .then(data => Promise.reject(data.error ?? response.statusText));
     }
 
-    async get(uri: string) {
+    get(uri: string) {
         return fetch(this.baseUrl + uri, {
             ...this.options,
             method: 'GET'
         }).then(this.handleResponse);
     }
 
-    async post(uri: string, data: object, method: ApiPostMethods = 'POST') {
+    post(uri: string, data: object, method: ApiPostMethods = 'POST') {
         return fetch(this.baseUrl + uri, {
             ...this.options,
             method,

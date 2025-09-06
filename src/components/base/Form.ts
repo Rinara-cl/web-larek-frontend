@@ -2,11 +2,14 @@ import { ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
 import { Component } from './Component';
 
+
+//Интерфейс описания состояния формы
 export interface IFormState {
 	valid: boolean;
 	errors: string[];
 }
 
+//Класс представляет собой расширенный компонент формы, который обрабатывает изменения и управление состояниями формы.
 export class Form<T> extends Component<IFormState> {
 	protected _submit: HTMLButtonElement;
 	protected _errors: HTMLElement;
@@ -41,10 +44,21 @@ export class Form<T> extends Component<IFormState> {
 	}
 
 	set valid(value: boolean) {
-		this.setDisabled(this._submit, !value);
+		if (value) {
+			this.setDisabled(this._submit, false);
+		} else {
+			this.setDisabled(this._submit, true);
+		}
 	}
 
 	set errors(value: string) {
 		this.setText(this._errors, value);
+	}
+
+	render(state: Partial<T> & IFormState) {
+		const { valid, errors, ...inputs } = state;
+		super.render({ valid, errors, });
+		Object.assign(this, inputs);
+		return this.container;
 	}
 }

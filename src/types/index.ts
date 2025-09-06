@@ -12,14 +12,10 @@ export interface IProductView {
 };
 
 
-//Тип оплаты
-export type PaymentMethod = 'cash'| 'card';
-
-
 // Интерфейс заказа
 export interface IOrder {
     items: string[];
-	payment: PaymentForm | string;
+	payment: string;
 	email: string;
 	phone: string;
 	address: string;
@@ -33,33 +29,14 @@ export interface IBasket {
 }
 
 // Тип Формы Способа оплаты
-export type PaymentForm = Pick<IOrder, 'payment' | 'address'>;
+export type PaymentForm =  Omit<IOrder, 'total' | 'items'>;
 
 // Тип Формы Контактов покупателя
-export type ContactForm = Pick<IOrder, 'email' | 'phone' | 'address'>;
+export type ContactForm =  Omit<IOrder, 'total' | 'items' | 'payment' | 'address'>;
 
-// Интерфейс успешной оплаты
-export interface ISuccessView {
-    id: string;
-    total: number;
-}
-
-// Интерфейс класса Success
-export interface ISuccessActions {
-	onClick: () => void;
-}
 
 // Форма ошибки
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
-
-
-
-// Интерфейс корзины
-export interface IBasketView {
-	items: HTMLElement[];
-	total: number;
-	buttonToggler: string[];
-}
 
 
 // тип каталога
